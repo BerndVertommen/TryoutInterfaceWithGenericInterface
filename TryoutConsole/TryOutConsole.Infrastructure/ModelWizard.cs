@@ -4,29 +4,31 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Autofac;
 
 namespace TryOutConsole.Infrastructure
 {
     public class ModelWizard : IModelWizard
     {
-        private readonly IEnumerable<IModelBuilder<IModel>> _modelBuilders;
+        private readonly ILifetimeScope _scope;
 
-        public ModelWizard(IEnumerable<IModelBuilder<IModel>> modelBuilders)
+        public ModelWizard(ILifetimeScope scope)
         {
-            _modelBuilders = modelBuilders;
+            _scope = scope;
         }
 
         public void CastFireBall(IModel model)
         {
-            var modelBuilder = _modelBuilders.FirstOrDefault(m => m.Name == model.Name);
+            Type type = typeof(IModelBuilder<>).MakeGenericType(model.GetType());
+            dynamic modelBuilder = _scope.Resolve(type);
 
             if (modelBuilder == null)
             {
-                Console.WriteLine($"No modelbuilder found. {_modelBuilders.Count()} modelbuilders injected");
+                //Console.WriteLine($"No modelbuilder found. {_modelBuilders.Count()} modelbuilders injected");
             }
             else
             {
-                modelBuilder.Build(model);
+                modelBuilder.Build((dynamic) model);
                 Cast(model);
             }
         }

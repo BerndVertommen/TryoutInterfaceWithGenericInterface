@@ -7,7 +7,12 @@ using System.Threading.Tasks;
 
 namespace TryOutConsole.Infrastructure
 {
-    public interface IModelBuilder<T> where T: IModel
+    public interface IModelBuilder
+    {
+        
+    }
+
+    public interface IModelBuilder<in T>: IModelBuilder where T: IModel
     {
         string Name { get;  }
         void Build(T model);

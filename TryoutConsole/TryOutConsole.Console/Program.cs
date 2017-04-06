@@ -37,12 +37,13 @@ namespace TryOutConsole.Console
             var referencedAssemby = typeof (IAmReferencedLibrary).Assembly;
 
             var assemblyTypes = referencedAssemby.GetTypes();
-            var typeWithInterface = typeof(IModelBuilder<IModel>);
 
-            foreach (var type in assemblyTypes.Where(t => typeWithInterface.IsAssignableFrom(t) && t.IsClass && !t.IsAbstract))
+            foreach (var type in assemblyTypes.Where(t => typeof(IModelBuilder).IsAssignableFrom(t) && !t.IsAbstract))
             {
-                builder.RegisterType(type).As<IModelBuilder<IModel>>().InstancePerLifetimeScope();
+                builder.RegisterType(type).AsSelf().AsImplementedInterfaces();
             }
+
+            builder.RegisterType<ModelWizard>().As<IModelWizard>();
 
             return builder.Build();
         }
