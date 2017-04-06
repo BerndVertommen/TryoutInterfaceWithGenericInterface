@@ -33,8 +33,12 @@ namespace TryOutConsole.Console
         private static IContainer RegisterComponents()
         {
             var builder = new ContainerBuilder();
+            builder.RegisterType<ModelWizard>().As<IModelWizard>();
 
             var referencedAssemby = typeof (IAmReferencedLibrary).Assembly;
+
+            //builder.RegisterType<ModelOne>().As<IModel>();
+            //builder.RegisterType<TryOutModelBuilderOne>().As<IModelBuilder<ModelOne>>();
 
             var assemblyTypes = referencedAssemby.GetTypes();
             var typeWithInterface = typeof(IModelBuilder<IModel>);
